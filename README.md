@@ -1,4 +1,2 @@
-# t_meteo_bgd
-# t_meteo_bgd
-# t_meteo_bgd
-# t_meteo_bgd
+# Telegram bot gives weather conditions in one regions of the  Russia
+
