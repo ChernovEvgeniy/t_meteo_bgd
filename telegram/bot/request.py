@@ -5,9 +5,9 @@ import threading
 import config
 
 #Функиця определения является ли строка числом
-def is_num(str):
+def is_num(sMeteoVal):
 	try:
-		float(str)
+		float(sMeteoVal)
 		return True
 	except ValueError:
 		return False
