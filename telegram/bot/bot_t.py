@@ -44,28 +44,25 @@ dictForeCast = {
      'tornado': 'ТОРНАДО!',
      'err': 'Ошибка! Прогноз временно отсутствует'
 }
-# listMeteoLocation(LMeteoLocation, LMeteoCommand)
-print(LMeteoLocation, LMeteoCommand)
+listMeteoLocation(LMeteoLocation, LMeteoCommand)
+
 # Получение команды /start или /help
-
-
 @bot.message_handler(commands=['start', 'help'])
-'''Функция обработки команды /start или /help
-   с выводом списка метеостанций одним сообщением'''
 
 
 def start(message):
+    '''Функция обработки команды /start или /help 
+       с выводом списка метеостанций одним сообщением'''
     listMeteoPr = 'List meteostation in Belgorodskaya oblast \n'
     for i in range(0, len(LMeteoLocation)):
         listMeteoPr = listMeteoPr + '\n' + LMeteoLocation[i]
     bot.send_message(message.chat.id, listMeteoPr)
 
-'''Получение команды по одной из метеостанции
-   и вывод реальных данных'''
-
 
 @bot.message_handler(commands=LMeteoCommand[:])
 def meteo(message):
+    '''Получение команды по одной из метеостанции
+        и вывод реальных данных'''
     meteoState = request.DataPressure()
     #Вывод названия метеостанции с её месторасположением и прогноз
     for i in range(0, len(LMeteoCommand)):
@@ -77,22 +74,18 @@ def meteo(message):
         masMeteo = meteoState[int(message.text[-2:])]
         for i in range(0, len(paramMeteoLoc)):
             if masMeteo[paramMeteoLocGet[i]] == 'null':
-                botMess = botMess + paramMeteoLoc[i] +
-                'Данные отсутствуют' + '\n'
+                botMess = botMess + paramMeteoLoc[i] + 'Данные отсутствуют'+'\n'
             else:
-                botMess = botMess + paramMeteoLoc[i] +
-                masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
+                botMess = botMess + paramMeteoLoc[i] + masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
         botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
         bot.send_message(message.chat.id, botMess)
     else:
         masMeteo = meteoState[int(message.text[-1])]
         for i in range(0, len(paramMeteoLoc)):
             if masMeteo[paramMeteoLocGet[i]] == 'null':
-                botMess = botMess + paramMeteoLoc[i] +
-                'Данные отсутствуют' + '\n'
+                botMess = botMess + paramMeteoLoc[i] + 'Данные отсутствуют'+'\n'
             else:
-                botMess = botMess + paramMeteoLoc[i] +
-                masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
+                botMess = botMess + paramMeteoLoc[i] + masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
         botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
         bot.send_message(message.chat.id, botMess)
 bot.polling()

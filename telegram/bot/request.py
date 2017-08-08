@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 import requests
 import time
-import threading
 import config
-
 
 # Функиця определения является ли строка числом
 def is_num(sMeteoVal):
     try:
-	    float(sMeteoVal)
+        float(sMeteoVal)
         return True
     except ValueError:
         return False
-
 
 # Запрос списка метеостанций и вывод в строчном значении
 def IdMeteoLst():
@@ -79,18 +76,18 @@ def DictDataMeteo():
                   .format(content=err.response.content))
             continue
         splMeteo = reqGet.text.split(',')
-        x, y = splMeteo[0].split('":"')
+        x, y = splMeteo[0].split('":')
         dictMeteo = {}
         dictMeteo[x[2:]] = y[:-1]
         for i in range(1, len(splMeteo)):
-            x, y = splMeteo[i].split(':')
+            x, y = splMeteo[i].split('":')
             if is_num(y) or y == 'null':
-                dictMeteo[x[1:-1]] = y
+                dictMeteo[x[1:]] = y
             else:
                 if i == len(splMeteo):
-                    dictMeteo[x[1:-1]] = y[1:-2]
+                    dictMeteo[x[1:]] = y[1:-2]
                 else:
-                    dictMeteo[x[1:-1]] = y[1:-1]
+                    dictMeteo[x[1:]] = y[1:-1]
         dictMeteo['symbol'] = lstIdNameFC[j][2]
         lDictMeteo.append(dictMeteo)
     return dict(zip(nMeteo, lDictMeteo))
@@ -117,4 +114,3 @@ def DataPressure():
         except:
             continue
     return lisDictMeteo
-lisDictMeteo = DataPressure()
