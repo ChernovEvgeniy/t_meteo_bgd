@@ -2,6 +2,8 @@
 import telebot
 import config
 import request
+from telebot import types
+
 # Создаем объект бота
 bot = telebot.TeleBot(config.token)
 # Инициализируем пустые списки локаций и команд метеостанций
@@ -47,16 +49,33 @@ dictForeCast = {
 listMeteoLocation(LMeteoLocation, LMeteoCommand)
 
 # Получение команды /start или /help
+
+
 @bot.message_handler(commands=['start', 'help'])
-
-
 def start(message):
     '''Функция обработки команды /start или /help 
        с выводом списка метеостанций одним сообщением'''
     listMeteoPr = 'List meteostation in Belgorodskaya oblast \n'
+    if message.text == '/help':
+        collect_inf = 'Данный бот позволяет получить информацию об актуальной \
+                        метеорологической обстановке в различных районах Б. \
+                        области. Ниже приведен список метеостанций, которе в \
+                        в реальном времени позволяют получить информацию о \
+                        температуре воздуха, атмосферного давления, влажности \
+                        состоянии дорожного полотна и прогнозируемой погодной \
+                        обстановке'
+        bot.send_message(message.chat.id, collect_inf)
     for i in range(0, len(LMeteoLocation)):
         listMeteoPr = listMeteoPr + '\n' + LMeteoLocation[i]
-    bot.send_message(message.chat.id, listMeteoPr)
+    #Добавление кнопки для быстрого переходна на карту с расположением станций
+    keyboard = types.InlineKeyboardMarkup()
+    url_button = types.InlineKeyboardButton(text='Карта с расположением станций',
+                                            url=config.url_button_as)
+    keyboard.add(url_button)
+    bot.send_message(message.chat.id, listMeteoPr, reply_markup=keyboard)
+
+
+
 
 
 @bot.message_handler(commands=LMeteoCommand[:])
@@ -88,4 +107,8 @@ def meteo(message):
                 botMess = botMess + paramMeteoLoc[i] + masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
         botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
         bot.send_message(message.chat.id, botMess)
+
+
+
+
 bot.polling()
