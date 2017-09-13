@@ -30,11 +30,20 @@ def IdMeteoLst():
     spListID = []
     spListNM = []
     spListFC = []
-    # Создаем список id метеостанций и названий
+    spListXY = []
+    sBufListX = []
+    sBufListY = []
+    # Создаем список id метеостанций и названий и координат
     for i in range(len(spReqMet)):
         sPointID = spReqMet[i].find('id')
         sPointNM = spReqMet[i].find('name')
         sPointFC = spReqMet[i].find('symbol')
+        sPointX = spReqMet[i].find('"x"')
+        sPointY = spReqMet[i].find('"y"')
+        if sPointX != -1:
+            sBufListX.append(float(spReqMet[i][spReqMet[i].rfind(':') + 1:]))
+        if sPointY != -1:
+            sBufListY.append(float(spReqMet[i][spReqMet[i].rfind(':') + 1:]))
         if sPointID != -1:
             spListID.append(int(spReqMet[i][spReqMet[i].rfind(':') + 1:]))
         if sPointNM != -1:
@@ -46,7 +55,8 @@ def IdMeteoLst():
                 spListFC.append(spReqMet[i][spReqMet[i].rfind(':') + 2:-2])
             else:
                 spListFC.append(spReqMet[i][spReqMet[i].rfind(':') + 2:-1])
-    return list(zip(spListID, spListNM, spListFC))
+    spListXY = (list(zip(sBufListX, sBufListY)))
+    return list(zip(spListID, spListNM, spListFC, spListXY))
 
 
 def DictDataMeteo():
