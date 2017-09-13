@@ -76,8 +76,6 @@ def start(message):
 
 
 
-
-
 @bot.message_handler(commands=LMeteoCommand[:])
 def meteo(message):
     '''Получение команды по одной из метеостанции
@@ -107,8 +105,4 @@ def meteo(message):
                 botMess = botMess + paramMeteoLoc[i] + masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
         botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
         bot.send_message(message.chat.id, botMess)
-
-
-
-
 bot.polling()
