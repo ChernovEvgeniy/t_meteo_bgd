@@ -3,6 +3,7 @@ import requests
 import time
 import config
 
+
 # Функиця определения является ли строка числом
 def is_num(sMeteoVal):
     try:
@@ -11,25 +12,37 @@ def is_num(sMeteoVal):
     except ValueError:
         return False
 
-# Запрос списка метеостанций и вывод в строчном значении
-def IdMeteoLst():
+
+#Функция выполнения запроса к сервису и обработка ошибок
+def request_as(adrr):
     try:
-        reqGet = requests.get(config.adrrMapIndex, timeout=15)
+        reqGet = requests.get(adrr, timeout=15)
         reqGet.raise_for_status()
     except requests.exceptions.ConnectTimeout:
+        reqGet = ''
         print('Error! Connect timeout ocurred!')
     except requests.exceptions.RealTimeout:
+        reqGet = ''
         print('Error! Read timeout ocurred!')
     except requests.exceptions.ConnectionError:
+        reqGet = ''
         print('Seems like dns lookup failed.')
     except requests.exceptions.HTTPError as err:
+        reqGet = ''
         print('Error! HTTP Errors occured!')
         print('Response is: {connect}'.format(content=err.response.content))
+    finally:
+        return reqGet
+
+
+# Запрос списка метеостанций и вывод в строчном значении
+def IdMeteoLst():
+    reqGet = request_as(config.adrrMapIndex)
     reqMeteo = reqGet.text
     spReqMet = reqMeteo.split(',')
     spListID = []
     spListNM = []
-    spListFC = []
+    spListFC = [] #Символ прогноза/облачности
     spListXY = []
     sBufListX = []
     sBufListY = []
@@ -67,23 +80,8 @@ def DictDataMeteo():
     dictMeteo = {}
     for j in range(len(lstIdNameFC)):
         nMeteo.append(lstIdNameFC[j][0])
-        try:
-            reqGet = requests.get(config.adrrMapLast +
-                                  str(nMeteo[j]), timeout=15)
-            reqGet.raise_for_status()
-        except requests.exceptions.ConnectTimeout:
-            print('Error! Connect timeout ocurred!')
-            continue
-        except requests.exceptions.RealTimeout:
-            print('Error! Read timeout ocurred!')
-            continue
-        except requests.exceptions.ConnectionError:
-            print('Seems like dns lookup failed.')
-            continue
-        except requests.exceptions.HTTPError as err:
-            print('Error! HTTP Errors occured!')
-            print('Response is: {connect}'
-                  .format(content=err.response.content))
+        reqGet = request_as(config.adrrMapLast + str(nMeteo[j]))
+        if reqGet == '':
             continue
         splMeteo = reqGet.text.split(',')
         x, y = splMeteo[0].split('":')
