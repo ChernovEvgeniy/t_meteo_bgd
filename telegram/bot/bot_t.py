@@ -82,8 +82,8 @@ def meteo(message):
             else:
                 botMess = botMess + paramMeteoLoc[i] +
                 masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
-        botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
-        bot.send_message(message.chat.id, botMess)
+        #botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
+        #bot.send_message(message.chat.id, botMess)
     else:
         masMeteo = meteoState[int(message.text[-1])]
         for i in range(0, len(paramMeteoLoc)):
@@ -93,6 +93,6 @@ def meteo(message):
             else:
                 botMess = botMess + paramMeteoLoc[i] +
                 masMeteo[paramMeteoLocGet[i]] + paramMeteoLocDes[i] + '\n'
-        botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
-        bot.send_message(message.chat.id, botMess)
+        #botMess = botMess + '-Прогноз: ' + dictForeCast[masMeteo['symbol']]
+    bot.send_message(message.chat.id, botMess)
 bot.polling()
